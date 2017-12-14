@@ -26,4 +26,11 @@ var io = socket(server);
 // We can then do stuff with this socket object. 
 io.on('connection', function(mysocket) {
     console.log('made socket connection', mysocket.id);
+
+    // listen/handle the messages sent to us from the client
+    mysocket.on('chat', function(data){
+      // this will refer to all different sockets connected to the server viewing the chat room
+      io.sockets.emit('chat', data);
+      // so now in the front end when we receive the data, we can handle it and put it on the screen
+    })
 });
