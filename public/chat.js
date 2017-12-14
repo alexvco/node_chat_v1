@@ -15,6 +15,7 @@ var message = document.getElementById('message');
 var handle = document.getElementById('handle');
 var btn = document.getElementById('send');
 var output = document.getElementById('output');
+var feedback = document.getElementById('feedback');
 
 
 
@@ -28,8 +29,24 @@ btn.addEventListener('click', function(){
 });
 
 
+message.addEventListener('keypress', function(){
+  front_end_socket.emit('typing', handle.value);
+})
+
 
 // Listen for events (chat event from the server) and output data in the DOM
 front_end_socket.on('chat', function(data){
+  feedback.innerHTML = "";
   output.innerHTML += "<p><strong>" + data.myhandle + ": </strong>" + data.mymessage + "</p>";
-})
+});
+
+
+
+// Broadcasting messages definition: 
+// If we were to emit a message from the client to the server. The server listens to it.
+// If the server broadcasts a message, then what it does, is send the message down every web socket to every client except the original one, the one that sent the message in the first place. 
+front_end_socket.on('typing', function(data){
+  feedback.innerHTML = "<p><em>" + data + " is typing a message...</em></p>";
+});
+
+

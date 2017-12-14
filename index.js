@@ -32,5 +32,11 @@ io.on('connection', function(mysocket) {
       // this will refer to all different sockets connected to the server viewing the chat room
       io.sockets.emit('chat', data);
       // so now in the front end when we receive the data, we can handle it and put it on the screen
-    })
+    });
+
+    mysocket.on('typing', function(data){
+      // when someone is typing we want to broadcast this message to everyone in the chat room (every single socket or client) except the original
+      mysocket.broadcast.emit('typing', data);
+    });
+
 });
